@@ -29,25 +29,59 @@ def naloga1(besedilo: str, p: int) -> float:
         stevila poznanih predhodnih znakov 'p'. V bitih.
     """
 
-    
+    # match p:
+    #     case 0:
 
-    H = average_information(probabilities(besedilo))
+    #     case 1:
+
+    #     case 2:
+
+    #     case 3:
+
+    # strs = substrings(besedilo, 3)
+    # print(0**1)
+    # print(strs)
+    P = probabilities(parse(besedilo), substrings(besedilo, 3))
+    print(P)
+    # H = average_information(P)
+    # I = own_information(P)
+
+    # print(I)
+    H = float("nan")
     return H
 
-def parse(txt: str) -> str:
-    return "".join([znak for znak in txt if znak.isalpha()]).upper()
 
-def average_information(p: Dict[str,float]) -> float:
-    return sum()
+# def calculate(strings: list[str], p: int) -> float:
+#     for i in len(strings):
+#         match p:
+#             case 0:
+#                 average_information()
+#             case 1:
+
+#             case 2:
+
+#             case 3:
+def parse(txt: str) -> str:
+    return "".join([znak.upper() for znak in txt if znak.isalpha()])
+
+def substrings(string: str, p:int) -> list[str]:
+    string = parse(string)
+    return [string[i:i+p] for i in range(len(string) - p + 0**(p-1))]
+
+def own_information(p:dict[str,float]) -> dict[str, float]:
+    return {k:(-math.log2(v)) for k,v in p.items()}
+
+def average_information(p: dict[str,float]) -> float:
+    return sum((-v) * math.log2(v) for v in p.values())
 # def average_information(p: list[float]) -> float:
 #     return sum((-v) * math.log2(v) for v in p)
 
 # def probabilities(txt: str) -> list[float]:
 #     return [v/len(txt) for v in Counter(parse(txt)).values()]
 
-def probabilities(txt: str) -> Dict[str, float]:
-    return {key:value for key,value in Counter(parse(txt)).values()}
+def probabilities(txt:str, substrings: list[str]) -> dict[str, float]:
+    return {sub:(txt.count(sub)/len(txt)) for sub in substrings}
 
-naloga1("oaeuaaoeaaooehtns", 0)
+naloga1("abbabba", 3)
 
 # def average_information(x: List[str])
