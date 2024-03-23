@@ -28,21 +28,53 @@ def naloga1(besedilo: str, p: int) -> float:
         Povprecna informacija na znak abecede z upostevanjem 
         stevila poznanih predhodnih znakov 'p'. V bitih.
     """
+    besedilo = parse(besedilo)
+    print(besedilo)
+    match p:
+        case 0:
+            f0 = Counter(besedilo)
+            p0 = { freq:(f0[freq]/len(besedilo)) for freq in f0 }
+            H0 = { prob:-p0[prob]*math.log2(p0[prob]) for prob in p0 }
+            print(sum(H0.values()))
+            return H0
+        case 1:
+            # sub = zip(besedilo, besedilo[1:])
+            H0 = naloga1(besedilo, 0)
+            sub = [ "".join(s) for s in zip(besedilo, besedilo[1:]) ]
+            f1 = {s:sub.count(s) for s in tuple(sub)}
+            fsum = sum(f1.values())
+            p1 = { freq:(f1[freq]/fsum) for freq in f1 }
+            H1 = { prob:(-p1[prob]*math.log2(p1[prob]) - H0[prob[:1]]) for prob in p1 }
+            print(sum(H1.values()))
+            return H1
+        case 2:
 
-    # match p:
-    #     case 0:
-
-    #     case 1:
-
-    #     case 2:
-
-    #     case 3:
+            # test = zip(besedilo, besedilo[1:], besedilo[2:]);
+            # print(tuple(test))
+            H1 = naloga1(besedilo, 1)
+            sub = [ "".join(s) for s in zip(besedilo, besedilo[1:], besedilo[2:]) ]
+            f2 = {s:sub.count(s) for s in tuple(sub)}
+            fsum = sum(f2.values())
+            p2 = { freq:(f2[freq]/fsum) for freq in f2 }
+            H2 = { prob:(-p2[prob]*math.log2(p2[prob]) - H1[prob[:2]]) for prob in p2 }
+            print(sum(H2.values()))
+            return H2
+        case 3:
+            # test = zip(besedilo, besedilo[1:],besedilo[2:],besedilo[3:]);
+            # print(tuple(test))
+            H2 = naloga1(besedilo, 2)
+            sub = [ "".join(s) for s in zip(besedilo, besedilo[1:],besedilo[2:],besedilo[3:]) ]
+            f3 = {s:sub.count(s) for s in tuple(sub)}
+            fsum = sum(f3.values())
+            p3 = { freq:(f3[freq]/fsum) for freq in f3 }
+            H3 = { prob:(-p3[prob]*math.log2(p3[prob]) - H2[prob[:3]]) for prob in p3 }
+            print(sum(H3.values()))
 
     # strs = substrings(besedilo, 3)
     # print(0**1)
     # print(strs)
-    P = probabilities(parse(besedilo), substrings(besedilo, 3))
-    print(P)
+    # P = probabilities(parse(besedilo), substrings(besedilo, 3))
+    # print(P)
     # H = average_information(P)
     # I = own_information(P)
 
@@ -61,6 +93,9 @@ def naloga1(besedilo: str, p: int) -> float:
 #             case 2:
 
 #             case 3:
+
+
+
 def parse(txt: str) -> str:
     return "".join([znak.upper() for znak in txt if znak.isalpha()])
 
@@ -82,6 +117,9 @@ def average_information(p: dict[str,float]) -> float:
 def probabilities(txt:str, substrings: list[str]) -> dict[str, float]:
     return {sub:(txt.count(sub)/len(txt)) for sub in substrings}
 
-naloga1("abbabba", 3)
+# naloga1("abbabba", 0)
+# naloga1("abbabba", 1)
+# naloga1("abbabba", 2)
+naloga1("AbB,a.bC", 1)
 
 # def average_information(x: List[str])
