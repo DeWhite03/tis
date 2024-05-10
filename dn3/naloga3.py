@@ -1,18 +1,13 @@
 import numpy as np
 
 def generate_H(n: int, m: int):
-
-    m = int(np.log2(n + 1))  # Number of parity bits
-    k = n - m  # Number of data bits
-
-    # Generate the parity-check matrix
-    H = np.zeros((m, n), dtype=np.int8)
-    for i in range(m):
-        for j in range(n):
-            if (j + 1) & (1 << i):
-                H[i, j] = 1
-
-    return H
+    k = n - m - 1
+    print(k)
+    H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum([*np.binary_repr(i)))]
+    H = np.transpose(H_t)
+    print(H_t)
+    print(H)
+    # return H
 
 
 
@@ -62,6 +57,7 @@ def naloga3(vhod: list, n: int) -> tuple[list, str]:
     '''
     
     m = int(np.log2(n) + 1)
+    
     k = n - m
     H = generate_H(n, m)
     print(H)
