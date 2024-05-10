@@ -3,7 +3,7 @@ import numpy as np
 def generate_H(n: int, m: int):
     k = n - m - 1
     print(k)
-    H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum([*np.binary_repr(i)))]
+    H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum(np.array([*np.binary_repr(i, k)]), dtype=np.int8) > 1]
     H = np.transpose(H_t)
     print(H_t)
     print(H)
