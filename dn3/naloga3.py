@@ -5,6 +5,7 @@ def generate_H(n: int, m: int):
     print(k)
     H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum(np.array([*np.binary_repr(i, k)]), dtype=np.int8) > 1]
     H = np.transpose(H_t)
+    H = np.concatenate((H, np.eye(k, dtype=np.int8)), axis=1)
     print(H_t)
     print(H)
     # return H
