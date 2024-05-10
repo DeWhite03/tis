@@ -9,7 +9,20 @@ def generate_H(n: int, m: int, k: int):
     print(H)
     return H
 
+def calculate_crc(vhod: list):
+    crc = np.array([1,1,1,1,1,1,1,1])  # Začetna vrednost registra
+    polinome = np.array([1, 0, 0, 1, 1, 0, 1, 1])  # Polinom
 
+    for i, v in enumerate(vhod):
+        # parity = ((crc & 0x80 >> 7)+v) % 2
+        parity =(v + crc[0]) % 2
+        crc = crc[1:]
+        crc = np.concatenate((crc, [0]), axis=1)
+        if parity != 0:
+            crc = (crc + polinome) % 2
+
+
+    return hex(crc)[2:].upper().zfill(2) 
 
 def naloga3(vhod: list, n: int) -> tuple[list, str]:
     """
@@ -62,25 +75,22 @@ def naloga3(vhod: list, n: int) -> tuple[list, str]:
     H = generate_H(n, m, k)
     print(H)
     s = vhod[:n_H] @ np.transpose(H) % 2
-    bit = -1
-    print(np.transpose(H))
-    for i, h in enumerate (np.transpose(H)):
-        print(s)
-        print(i , h)
-        if all(x == y for x,y in zip(s, h)):
-            bit = i
-            break
+    parity = sum(vhod) % 2
+    if sum(s) != 0 and parity == 1:
+
+        bit = -1
+        print(np.transpose(H))
+        for i, h in enumerate (np.transpose(H)):
+            print(s)
+            print(i , h)
+            if all(x == y for x,y in zip(s, h)):
+                bit = i
+                break
     
     print(bit)
     vhod[bit] = 1 - vhod[bit]
-    # s = s % 2
-
-    # s = [i % 2 for i in s]
-    # print(vhod[:7])
-    # print(s)
     izhod = vhod[:m]
-    # print(H)
-    crc = 0
+    crc = calculate_crc(vhod)
     return (izhod, crc)
 
 print(naloga3([
