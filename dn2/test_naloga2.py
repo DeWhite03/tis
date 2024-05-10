@@ -73,7 +73,7 @@ def main(case_dir="primeri", case_id=None, *other):
     # Poženemo za vse primere;
     # v primeru določenega case_id, upoštevamo le-tega
     if not case_id:
-        [test_naloga2(case_dir, case_id=i) for i in range(1, 4)]
+        [test_naloga2(case_dir, case_id=i) for i in range(1, 14)]
     else:
         test_naloga2(case_dir, case_id)
 

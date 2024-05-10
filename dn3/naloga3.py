@@ -1,5 +1,21 @@
 import numpy as np
 
+def generate_H(n: int, m: int):
+
+    m = int(np.log2(n + 1))  # Number of parity bits
+    k = n - m  # Number of data bits
+
+    # Generate the parity-check matrix
+    H = np.zeros((m, n), dtype=np.int8)
+    for i in range(m):
+        for j in range(n):
+            if (j + 1) & (1 << i):
+                H[i, j] = 1
+
+    return H
+
+
+
 def naloga3(vhod: list, n: int) -> tuple[list, str]:
     """
     Izvedemo dekodiranje binarnega niza `vhod`, zakodiranega 
@@ -44,6 +60,15 @@ def naloga3(vhod: list, n: int) -> tuple[list, str]:
     s = y * H^T
     in potem poisces sindrom v matriki H ter na mestu sindroma flipas bit v sporocilu
     '''
+    
+    m = int(np.log2(n) + 1)
+    k = n - m
+    H = generate_H(n, m)
+    print(H)
+
+
     izhod = []
     crc = ''
     return (izhod, crc)
+
+naloga3([], 8);
