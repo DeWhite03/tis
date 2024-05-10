@@ -1,14 +1,13 @@
 import numpy as np
 
-def generate_H(n: int, m: int):
-    k = n - m - 1
-    print(k)
+def generate_H(n: int, m: int, k: int):
+    # print(k)
     H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum(np.array([*np.binary_repr(i, k)]), dtype=np.int8) > 1]
     H = np.transpose(H_t)
     H = np.concatenate((H, np.eye(k, dtype=np.int8)), axis=1)
     print(H_t)
     print(H)
-    # return H
+    return H
 
 
 
@@ -58,14 +57,39 @@ def naloga3(vhod: list, n: int) -> tuple[list, str]:
     '''
     
     m = int(np.log2(n) + 1)
-    
-    k = n - m
-    H = generate_H(n, m)
+    n_H = n -1
+    k = n_H - m
+    H = generate_H(n, m, k)
     print(H)
+    s = vhod[:n_H] @ np.transpose(H) % 2
+    bit = -1
+    print(np.transpose(H))
+    for i, h in enumerate (np.transpose(H)):
+        print(s)
+        print(i , h)
+        if all(x == y for x,y in zip(s, h)):
+            bit = i
+            break
+    
+    print(bit)
+    vhod[bit] = 1 - vhod[bit]
+    # s = s % 2
 
-
-    izhod = []
-    crc = ''
+    # s = [i % 2 for i in s]
+    # print(vhod[:7])
+    # print(s)
+    izhod = vhod[:m]
+    # print(H)
+    crc = 0
     return (izhod, crc)
 
-naloga3([], 8);
+print(naloga3([
+        1,
+        0,
+        0,
+        1,
+        0,
+        0,
+        1,
+        0
+    ], 8))
