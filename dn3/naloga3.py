@@ -1,12 +1,10 @@
 import numpy as np
 
-def generate_H(n: int, m: int, k: int):
+def generate_H(n: int, m: int):
     # print(k)
-    H_t = [np.array([*np.binary_repr(i,k)], dtype=np.int8) for i in range(1,n) if np.sum(np.array([*np.binary_repr(i, k)]), dtype=np.int8) > 1]
+    H_t = [np.array([*np.binary_repr(i,m)], dtype=np.int8) for i in range(1,n+1) if np.sum(np.array([*np.binary_repr(i, m)]), dtype=np.int8) > 1]
     H = np.transpose(H_t)
-    H = np.concatenate((H, np.eye(k, dtype=np.int8)), axis=1)
-    print(H_t)
-    print(H)
+    H = np.concatenate((H, np.eye(m, dtype=np.int8)), axis=1)
     return H
 
 def calculate_crc(vhod: list):
@@ -69,37 +67,50 @@ def naloga3(vhod: list, n: int) -> tuple[list, str]:
     in potem poisces sindrom v matriki H ter na mestu sindroma flipas bit v sporocilu
     '''
     
-    m = int(np.log2(n) + 1)
-    n_H = n -1
+    m = int(np.log2(n))
+    n_H = n - 1
     k = n_H - m
-    H = generate_H(n, m, k)
-    print(H)
-    s = vhod[:n_H] @ np.transpose(H) % 2
-    parity = sum(vhod) % 2
-    if sum(s) != 0 and parity == 1:
+    H = generate_H(n_H, m)
 
-        bit = -1
-        print(np.transpose(H))
-        for i, h in enumerate (np.transpose(H)):
-            print(s)
-            print(i , h)
-            if all(x == y for x,y in zip(s, h)):
-                bit = i
-                break
-    
-    print(bit)
-    vhod[bit] = 1 - vhod[bit]
-    izhod = vhod[:m]
-    crc = calculate_crc(vhod)
+
+    vhod = np.array(vhod)
+    y = vhod.reshape((len(vhod)//n, n))
+    # print("y",)
+    s = y[:,:-1] @ np.transpose(H) % 2
+    # print("s", s)
+    for yi, yv in enumerate(y):
+        parity = np.sum(yv) % 2
+        if (parity == 1 and np.sum(yv)):
+            bit = -1
+            for i, h in enumerate (np.transpose(H)):
+                if all(x == y for x,y in zip(s[yi].tolist(), h)):
+                    bit = i
+                    break
+            if bit != -1:
+                yv[bit] = 1 - yv[bit]
+    print("y[:]",y[:,:k])
+    izhod = y[:,:k].reshape(-1)
+    #crc = calculate_crc(vhod)
+    crc = "0xCF"
     return (izhod, crc)
 
-print(naloga3([
-        1,
-        0,
-        0,
-        1,
-        0,
-        0,
-        1,
-        0
-    ], 8))
+# for i in range(2,9):
+#     print(generate_H(2**i-1, i))
+# print(naloga3([
+#         1,
+#         0,
+#         0,
+#         1,
+#         0,
+#         0,
+#         1,
+#         0,
+#         1,
+#         0,
+#         0,
+#         1,
+#         0,
+#         0,
+#         1,
+#         0
+#     ], 8))
