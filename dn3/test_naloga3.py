@@ -32,11 +32,10 @@ def test_naloga3(case_dir, case_id):
     success_izhod = izhod == data['izhod']
     success_crc = crc.upper() == data['crc'].upper()
     success = success_izhod*0.5 + success_crc*0.5
-
     # Izpišemo rezultat
     print("-"*72)
     print(f"Rezultat za primer {case_id}: {success} točk")
-    if success_izhod != 1:
+    if success_izhod.any() != 1:
         print(' ✗ Napačen `izhod`')
     if success_crc != 1:
         print(' ✗ Napačen `crc`')
@@ -72,7 +71,7 @@ def main(case_dir="primeri", case_id=None, *other):
     # Poženemo za vse primere;
     # v primeru določenega case_id, upoštevamo le-tega
     if not case_id:
-        [test_naloga3(case_dir, case_id=i) for i in range(1, 4)]
+        [test_naloga3(case_dir, case_id=i) for i in range(1, 14)]
     else:
         test_naloga3(case_dir, case_id)
 
